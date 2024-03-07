@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Logo from './img/img1.jpg'
 
 
 const Data = () => {
@@ -12,7 +13,7 @@ const Data = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:8081/${stock}`);
+                const res = await axios.get(`http://localhost:8800/${stock}`);
                 setData(res.data);
                 calculateTotalStockValue(res.data); // Calculate total stock value
             } catch (err) {
@@ -37,21 +38,59 @@ const Data = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:8081/${stock}/` + id); // Fix template string usage
+            await axios.delete(`http://localhost:8800/${stock}/` + id); // Fix template string usage
             window.location.reload();
         } catch (err) {
             console.log(err);
         }
     };
     return (
-        <div className='d-flex flex-column align-items-center'>
+        <div >
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container-fluid">
+        <img src={Logo} width="30" height="30" class="d-inline-block align-top" alt=""/>
+    inventory
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div
+            className="collapse navbar-collapse justify-content-end"
+            id="navbarNav"
+          >
+            <ul className="navbar-nav">
+              <li className="nav-item me-2">
+               
+                <Link className="link" to="/" style={{ textDecoration: "none", color: "black" }}>
+              <h6>HOME</h6>
+            </Link>
+                
+              </li>
+              <li className="nav-item">
+                
+              <Link to='/login' style={{ textDecoration: "none", color: "black" }}><h6>logout</h6></Link>
+              
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+        <div className='d-flex flex-column  vh-100 vw-100 justify-content-center align-items-center'>
             <div className='w-50 bg-white rounded mb-4 p-3'>
                 <div className='d-flex flex-row align-items-center'>
-                <div className="mx-2 p-2 border border-primary">Total Stock Value in INR:{totalStockValue}</div>
-                <div className="mx-2 p-2 border border-primary">Total Products: {getTotalProducts()}</div>
-                <div className="mx-2 p-2 border border-primary">Out-of-Stock Products: {getOutOfStockProducts()}</div>
+                <div className="mx-2 p-2  border border-primary">Total Stock Value in INR:{totalStockValue}</div>
+                <div className="mx-2 p-2  border border-primary">Total Products: {getTotalProducts()}</div>
+                <div className="mx-2 p-2  border border-primary">Out-of-Stock Products: {getOutOfStockProducts()}</div>
                 </div>
                 <h1 className="mb-4">Products In Inventory</h1>
+                <div className='table-responsive-lg'>
                 <table className='table table-hover table-bordered'>
                     <thead>
                         <tr>
@@ -81,11 +120,14 @@ const Data = () => {
                         ))}
                     </tbody>
                 </table>
+                </div>
             </div>
             <h2>Add products</h2>
             <button className='btn btn-success' style={{ textDecoration: 'none', boxShadow: 'none' }}>
                 <Link to={`/add/${stock}`}  style={{ color: 'inherit', textDecoration: 'none' }}>Add +</Link>
             </button>
+            </div>
+            
         </div>
     );
 };

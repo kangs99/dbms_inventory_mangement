@@ -1,15 +1,27 @@
 import express from "express";
 import cors from"cors";
-import mysql from "mysql2";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth.js"
+import{db} from './connect.js';
+
 const app=express();
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'list'
-})
+
 app.use(express.json()) 
 app.use(cors())
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+  });
+  app.use(express.json());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+  );
+  app.use(cookieParser());
+  
+app.use("/api/auth", authRoutes);
+
 
 app.get("/", (req, res) => {
     res.json("this is backend")
@@ -94,6 +106,6 @@ app.put("/:brand/:id", (req, res) => {
 });
 
 
-app.listen(8081,()=>{
+app.listen(8800,()=>{
     console.log("connected to backend");
 })

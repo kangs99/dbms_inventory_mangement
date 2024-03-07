@@ -1,0 +1,39 @@
+$lightGreen: #b9e7e7;
+
+.app {
+  display: flex;
+  justify-content: center;
+}
+
+.navbar {
+  background-color: $lightGreen;
+  width: 100vw; /* Set width to cover full viewport width */
+  padding: 10px 0px;
+  
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .logo {
+      img {
+        width: 120px;
+      }
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      h6 {
+        font-size: 16px;
+        font-weight: 300;
+      }
+
+      span {
+        cursor: pointer;
+      }
+    }
+  }
+}
