@@ -132,7 +132,7 @@ function Brands() {
               <div className="d-flex align-items-center justify-content-between mt-3 pb-3">
                 <div className="btn btn-primary btn-lg">
                   <Link
-                    to={`/data/puma`}
+                    to={`/data/underarmour`}
                     style={{ textDecoration: "none", color: "white" }}
                   >
                     Stock

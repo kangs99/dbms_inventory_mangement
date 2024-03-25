@@ -104,6 +104,72 @@ app.put("/:brand/:id", (req, res) => {
         return res.status(200).json({ message: "Product has been updated successfully." });
     });
 });
+app.get("/:brand/products",(req,res)=>{
+    const brand = req.params.brand;
+    const q = `CREATE ASSERTION ${BRAND} CHECK(SELECT SUM(Quantity) FROM Inventory) <= 1000000)`;
+    db.query(q, (err, data) => {
+        if (err) return res.json(err)
+        return res.json(data)
+    })
+});
+app.put("/:brand/:id/product", (req, res) => {
+    const brand = req.params.brand;
+    const stockId = req.params.id;
+    const q = `UPDATE ${brand} SET 
+        product_id=?, 
+        name=?, 
+        category=?, 
+        in_stock=?, 
+        buy_price=?, 
+        sell_price=?
+        WHERE product_id=?`;
+    const values = [
+        req.body.product_id,
+        req.body.name,
+        req.body.category,
+        req.body.in_stock,
+        req.body.buy_price,
+        req.body.sell_price,
+        stockId
+    ];
+    db.query(q, values, (err, data) => {
+        if (err) {
+            console.error(`Error updating the product in ${brand}:`, err);
+            return res.status(500).json({ error: "An error occurred while updating the product." });
+        }
+        
+      
+        const triggerQ = `
+            UPDATE Product SET 
+            product_id=?, 
+            name=?, 
+            category=?, 
+            in_stock=?, 
+            buy_price=?, 
+            sell_price=?
+            WHERE product_id=?
+        `;
+        const triggerValues = [
+            req.body.product_id,
+            req.body.name,
+            req.body.category,
+            req.body.in_stock,
+            req.body.buy_price,
+            req.body.sell_price,
+            stockId
+        ];
+        db.query(triggerQ, triggerValues, (err, data) => {
+            if (err) {
+                console.error(`Error triggering UpdateProductLog after updating the product in ${brand}:`, err);
+                return res.status(500).json({ error: "An error occurred while updating the product." });
+            }
+            console.log('Product update triggered UpdateProductLog successfully.');
+        });
+
+        return res.status(200).json({ message: "Product has been updated successfully." });
+    });
+});
+
 
 
 app.listen(8800,()=>{
